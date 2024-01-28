@@ -31,8 +31,6 @@ describe('AppController (e2e)', () => {
 
       expect(response.statusCode).toEqual(200)
 
-      console.log(response.body)
-
       expect(response.body.periods).toEqual(
         expect.arrayContaining([
           expect.objectContaining({

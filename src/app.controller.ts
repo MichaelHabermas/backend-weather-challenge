@@ -1,22 +1,14 @@
-import { Controller, Get, HttpCode, Query } from '@nestjs/common'
-import { WeathergovService } from './weathergov/weathergov.service'
-import { OpenstreetmapService } from './openstreetmap/openstreetmap.service'
-import { WeatherForecastResponse } from './common/types'
+import { Controller, Get, Query } from '@nestjs/common'
+import { AppService, WeatherResponse } from './app.service'
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly weatherGovService: WeathergovService,
-    private readonly openStreetMapService: OpenstreetmapService,
-  ) {}
+  constructor(private readonly appService: AppService) {}
 
   @Get('weather')
   async getWeather(
-    @Query('location') location: string,
-  ): Promise<WeatherForecastResponse> {
-    const { latitude, longitude } =
-      await this.openStreetMapService.getCoordinates(location)
-
-    throw Error('not implemented')
+    @Query('location') location: string | undefined,
+  ): Promise<WeatherResponse> {
+    return this.appService.getWeather(location)
   }
 }
