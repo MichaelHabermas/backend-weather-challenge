@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 
+interface IGridData {
+  gridId: string
+  gridX: number
+  gridY: number
+}
+
 interface IWG {
-  properties: {
-    gridId: string
-    gridX: number
-    gridY: number
-  }
+  properties: IGridData
 }
 
 export interface IPeriod {
@@ -32,7 +34,7 @@ export class WeatherGovService {
     })
   }
 
-  async getForecast(latitude: string, longitude: string) {
+  async getForecast(latitude: string, longitude: string): Promise<IPeriod[]> {
     const { gridId, gridX, gridY } = await this.getPoint(latitude, longitude)
 
     const response: AxiosResponse<IGetForecastResponse> =
@@ -47,7 +49,7 @@ export class WeatherGovService {
     return response.data.properties.periods
   }
 
-  async getPoint(latitude: string, longitude: string) {
+  async getPoint(latitude: string, longitude: string): Promise<IGridData> {
     const response: AxiosResponse<IWG> = await this.httpClient.get(
       `/points/${latitude},${longitude}`,
     )
